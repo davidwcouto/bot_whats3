@@ -122,6 +122,10 @@ const estaDentroDoHorario = () => {
     const minutosAtuais = agoraBrasil.minute;
     const diaSemana = agoraBrasil.weekday; // 1 - Segunda, 2 - Terça, ..., 7 - Domingo
 
+    // Se for Domingo (dia 7)
+    if (diaSemana === 7) {
+            return false;
+        }
 
     // Se for sabado (dia 6)
     if (diaSemana === 6) {
