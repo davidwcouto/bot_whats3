@@ -173,7 +173,7 @@ client.on("message", async (message) => {
     return;
   }
 
-    if (msg === "atendimento") {
+    if (msg === "atendimento" || "pedido") {
         if (estaDentroDoHorario()) {
         atendimentoHumano.add(chatId);
         await client.sendMessage(chatId, "📞 Você será atendido em breve. Aguarde...");
@@ -207,7 +207,7 @@ client.on("message", async (message) => {
   if (!clientesAtendidos.has(chatId)) {
     await client.sendMessage(
       chatId,
-      "Olá! Como posso te ajudar?\n 1️⃣ - Consultar valor\n 2️⃣ - Atendimento"
+      "Olá! Como posso te ajudar?\n 1️⃣ - Consultar valor\n 2️⃣ - Atendimento/Pedido"
     );
     usuariosPendentes.add(chatId); // Adiciona o cliente à lista de pendentes
     clientesAtendidos.add(chatId); // Marca o cliente como atendido
