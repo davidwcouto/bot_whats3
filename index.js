@@ -173,7 +173,7 @@ client.on("message", async (message) => {
     return;
   }
 
-    if (msg === "atendimento" || "pedido") {
+    if (msg === "atendimento" || msg === "pedido") {
         if (estaDentroDoHorario()) {
         atendimentoHumano.add(chatId);
         await client.sendMessage(chatId, "📞 Você será atendido em breve. Aguarde...");
