@@ -90,7 +90,7 @@ const buscarPreco = (produto) => {
     );
 
     if (!item) {
-        return "❌ Produto não encontrado.\n\nPara atendimento digite ⿢";
+        return "❌ Produto não encontrado.\n\nPara atendimento digite 2️⃣";
 	}
 	
     return `💰 O preço de *${item.Produto}* é *R$ ${item.Preco}* \n\nPara fazer pedido digite 2️⃣`;
