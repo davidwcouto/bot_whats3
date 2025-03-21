@@ -168,7 +168,7 @@ client.on("message_create", async (message) => {
         // Lista de palavras-chave usadas em respostas automáticas do bot
         const mensagensDoBot = [
             "📞", "💰", "⏳", "❌", "Olá!", "Digite o nome do produto",
-            "Como posso te ajudar?", "Para fazer pedido digite 2️⃣"
+            "Como posso te ajudar?", "Para fazer pedido digite 2️⃣", "Digite a opção"
         ];
 
         // Verifica se a mensagem é uma resposta automática do bot
