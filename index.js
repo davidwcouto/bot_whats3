@@ -37,6 +37,7 @@ const client = new Client({
 let atendimentoHumano = new Set(); // Armazena usuários em atendimento humano
 let clientesAtendidos = new Set(); // Garante que a mensagem inicial só seja enviada uma vez por cliente
 let usuariosPendentes = new Set(); // Armazena usuários que ainda não escolheram 1 ou 2
+let silencedChats = new Set(); // Lista de conversas silenciadas
 
 // Gera o QR Code para autenticação
 client.on("qr", (qr) => {
@@ -158,6 +159,33 @@ const estaDentroDoHorario = () => {
     return false; // Fora do horário de atendimento ou dentro do intervalo de não atendimento
 };
 
+// Evento para DETECTAR mensagens enviadas pelo próprio usuário e SILENCIAR a conversa
+client.on("message_create", async (message) => {
+    const chatId = message.to || message.from;
+
+    // Se a mensagem for enviada por VOCÊ manualmente
+    if (message.fromMe) {
+        // Lista de palavras-chave usadas em respostas automáticas do bot
+        const mensagensDoBot = [
+            "📞", "💰", "⏳", "❌", "Olá!", "Digite o nome do produto",
+            "Como posso te ajudar?", "Para fazer pedido digite 2️⃣", "Digite a opção", "⚠ Nenhum produto"
+        ];
+
+        // Verifica se a mensagem é uma resposta automática do bot
+        const ehMensagemDoBot = mensagensDoBot.some(keyword => message.body.includes(keyword));
+
+        if (!ehMensagemDoBot) {
+            silencedChats.add(chatId);
+            console.log(`Chat silenciado manualmente: ${chatId}`);
+
+            // Reativar automaticamente após 1 hora
+            setTimeout(() => {
+                silencedChats.delete(chatId);
+                console.log(`Chat reativado automaticamente: ${chatId}`);
+            }, 60 * 60 * 1000);
+        }
+    }
+});
 
 // Evento de mensagem recebida
 client.on("message", async (message) => {
@@ -167,6 +195,12 @@ client.on("message", async (message) => {
   const msg = message.body.toLowerCase().trim();
   const chat = await message.getChat();
   
+      // Se o chat estiver silenciado, ignorar a mensagem
+    if (silencedChats.has(chatId)) {
+        console.log(`Chat silenciado (${chatId}), ignorando mensagem.`);
+        return;
+    }
+
   // Verifica se o remetente está na lista de contatos autorizados
   if (!allowedContacts.includes(phone)) {
     console.log(`Número não autorizado (${phone}). Mensagem ignorada.`);
@@ -232,7 +266,7 @@ client.on("message", async (message) => {
 	  
 	          // Obter o chat e marcar a mensagem como não lida
        const chat = await message.getChat(); // Obtém o chat da mensagem
-		if (chat) await chat.markUnread(); // Marca a mensagem como não lida
+       await chat.markUnread(); // Marca a mensagem como não lida
 	  
       return;
     }
@@ -269,11 +303,7 @@ client.on("message", async (message) => {
     // Consulta de preço pelo nome do produto
     const respostaPreco = buscarPreco(msg);
     await client.sendMessage(chatId, respostaPreco);
-	// Obtém o chat e marca como não lido
-	const chat = await message.getChat();
-	if (chat) {
-		await chat.markUnread().catch(err => console.error("Erro ao marcar como não lido:", err.message));
-	}
+	await chat.markUnread();
 });
 
 client.initialize();
