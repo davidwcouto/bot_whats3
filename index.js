@@ -37,6 +37,7 @@ const client = new Client({
 let atendimentoHumano = new Set(); // Armazena usuários em atendimento humano
 let clientesAtendidos = new Set(); // Garante que a mensagem inicial só seja enviada uma vez por cliente
 let usuariosPendentes = new Set(); // Armazena usuários que ainda não escolheram 1 ou 2
+let silencedChats = new Set(); // Lista de conversas silenciadas
 
 // Gera o QR Code para autenticação
 client.on("qr", (qr) => {
@@ -158,6 +159,21 @@ const estaDentroDoHorario = () => {
     return false; // Fora do horário de atendimento ou dentro do intervalo de não atendimento
 };
 
+// Evento para DETECTAR mensagens enviadas pelo próprio usuário e SILENCIAR a conversa
+client.on("message_create", async (message) => {
+    if (message.fromMe) {
+        const chatId = message.to;
+        silencedChats.add(chatId);
+        console.log(`Chat silenciado: ${chatId}`);
+
+        // Reativar automaticamente após 1 hora
+        setTimeout(() => {
+            silencedChats.delete(chatId);
+            console.log(`Chat reativado automaticamente: ${chatId}`);
+        }, 60 * 60 * 1000);
+    }
+});
+
 
 // Evento de mensagem recebida
 client.on("message", async (message) => {
@@ -166,6 +182,12 @@ client.on("message", async (message) => {
   const phone = chatId.split("@")[0];
   const msg = message.body.toLowerCase().trim();
   const chat = await message.getChat();
+  
+      // Se o chat estiver silenciado, ignorar a mensagem
+    if (silencedChats.has(chatId)) {
+        console.log(`Chat silenciado (${chatId}), ignorando mensagem.`);
+        return;
+    }
 
   // Verifica se o remetente está na lista de contatos autorizados
   if (!allowedContacts.includes(phone)) {
