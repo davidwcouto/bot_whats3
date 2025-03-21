@@ -161,7 +161,8 @@ const estaDentroDoHorario = () => {
 
 // Evento para DETECTAR mensagens enviadas pelo próprio usuário e SILENCIAR a conversa
 client.on("message_create", async (message) => {
-    if (message.fromMe) {
+    // Se a mensagem foi enviada por você (fromMe = true) e NÃO for uma resposta automática do bot
+    if (message.fromMe && message.hasQuotedMsg === false) {
         const chatId = message.to;
         silencedChats.add(chatId);
         console.log(`Chat silenciado: ${chatId}`);
