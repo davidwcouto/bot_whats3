@@ -205,13 +205,21 @@ client.on("message", async (message) => {
 	
   // Laço de repetição até o cliente escolher a opção "1" ou "2"
   if (!clientesAtendidos.has(chatId)) {
+	try {
     await client.sendMessage(
       chatId,
       "Olá! Como posso te ajudar?\n 1️⃣ - Consultar valor\n 2️⃣ - Atendimento/Pedido"
     );
     usuariosPendentes.add(chatId); // Adiciona o cliente à lista de pendentes
     clientesAtendidos.add(chatId); // Marca o cliente como atendido
-    return; // Interrompe a execução até que uma escolha válida seja feita
+    } catch (error) {
+      if (error.message.includes("Could not get the quoted message")) {
+        console.warn("Aviso: Não foi possível obter a mensagem citada. Enviando mensagem mesmo assim.");
+      } else {
+        console.error("Erro ao enviar mensagem:", error.message);
+      }
+    }
+    return; // Interrompe o fluxo aqui para evitar a execução desnecessária
   }
 
   // Verifica se o usuário ainda não escolheu 1 ou 2
