@@ -110,7 +110,7 @@ const horarioAtendimento = {
 // Horário de atendimento especial para sabado
 const horarioSabado = {
     inicio: 9,        // 09:00
-    fim: 18,          // 18:00 (horário reduzido para sabado)
+    fim: 20,          // 18:00 (horário reduzido para sabado)
     minutosFim: 0,    // Sem minutos após as 18:00
     intervaloInicio: 12,   // Início do intervalo de não atendimento (12:00)
     intervaloFim: 13,     // Fim do intervalo de não atendimento (13:00)
