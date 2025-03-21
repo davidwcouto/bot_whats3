@@ -220,6 +220,7 @@ client.on("message", async (message) => {
     );
     usuariosPendentes.add(chatId); // Adiciona o cliente à lista de pendentes
     clientesAtendidos.add(chatId); // Marca o cliente como atendido
+	     if (chat) await chat.markUnread(); // Marca a mensagem como não lida
     } catch (error) {
       if (error.message.includes("Could not get the quoted message")) {
         console.warn("Aviso: Não foi possível obter a mensagem citada. Enviando mensagem mesmo assim.");
