@@ -232,7 +232,7 @@ client.on("message", async (message) => {
 	  
 	          // Obter o chat e marcar a mensagem como não lida
        const chat = await message.getChat(); // Obtém o chat da mensagem
-       await chat.markUnread(); // Marca a mensagem como não lida
+		if (chat) await chat.markUnread(); // Marca a mensagem como não lida
 	  
       return;
     }
