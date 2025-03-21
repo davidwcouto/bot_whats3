@@ -82,7 +82,6 @@ const buscarPreco = (produto) => {
     // Se a mensagem for apenas "incell", "original" ou "nacional", retorna erro
     const termosInvalidos = ["incell", "incel", "original", "orig", "nacional", "nac"];
     if (termosInvalidos.includes(produto.toLowerCase())) {
-		await chat.markUnread(); // Marca a mensagem como não lida
         return "❌ Digite o nome completo do produto.";
 	}
 
@@ -91,7 +90,6 @@ const buscarPreco = (produto) => {
     );
 
     if (!item) {
-		await chat.markUnread(); // Marca a mensagem como não lida
         return "❌ Produto não encontrado.\n\nPara atendimento digite 2️⃣";
 	}
 	
@@ -271,8 +269,11 @@ client.on("message", async (message) => {
     // Consulta de preço pelo nome do produto
     const respostaPreco = buscarPreco(msg);
     await client.sendMessage(chatId, respostaPreco);
-	await chat.markUnread();
-	await chat.markUnread(); // Marca a mensagem como não lida
+	// Obtém o chat e marca como não lido
+	const chat = await message.getChat();
+	if (chat) {
+		await chat.markUnread().catch(err => console.error("Erro ao marcar como não lido:", err.message));
+	}
 });
 
 client.initialize();
