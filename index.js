@@ -161,19 +161,29 @@ const estaDentroDoHorario = () => {
 
 // Evento para DETECTAR mensagens enviadas pelo próprio usuário e SILENCIAR a conversa
 client.on("message_create", async (message) => {
-    // Obtém o chatId corretamente
     const chatId = message.to || message.from;
 
-    // Verifica se a mensagem foi enviada manualmente pelo usuário
-    if (message.fromMe && !message.hasQuotedMsg && !message.body.startsWith("📞") && !message.body.startsWith("💰")) {
-        silencedChats.add(chatId);
-        console.log(`Chat silenciado: ${chatId}`);
+    // Se a mensagem for enviada por VOCÊ manualmente
+    if (message.fromMe) {
+        // Lista de palavras-chave usadas em respostas automáticas do bot
+        const mensagensDoBot = [
+            "📞", "💰", "⏳", "❌", "Olá!", "Digite o nome do produto",
+            "Como posso te ajudar?", "Para fazer pedido digite 2️⃣"
+        ];
 
-        // Reativar automaticamente após 1 hora
-        setTimeout(() => {
-            silencedChats.delete(chatId);
-            console.log(`Chat reativado automaticamente: ${chatId}`);
-        }, 60 * 60 * 1000);
+        // Verifica se a mensagem é uma resposta automática do bot
+        const ehMensagemDoBot = mensagensDoBot.some(keyword => message.body.includes(keyword));
+
+        if (!ehMensagemDoBot) {
+            silencedChats.add(chatId);
+            console.log(`Chat silenciado manualmente: ${chatId}`);
+
+            // Reativar automaticamente após 1 hora
+            setTimeout(() => {
+                silencedChats.delete(chatId);
+                console.log(`Chat reativado automaticamente: ${chatId}`);
+            }, 60 * 60 * 1000);
+        }
     }
 });
 
