@@ -37,7 +37,6 @@ const client = new Client({
 let atendimentoHumano = new Set(); // Armazena usuários em atendimento humano
 let clientesAtendidos = new Set(); // Garante que a mensagem inicial só seja enviada uma vez por cliente
 let usuariosPendentes = new Set(); // Armazena usuários que ainda não escolheram 1 ou 2
-let silencedChats = new Set(); // Lista de conversas silenciadas
 
 // Gera o QR Code para autenticação
 client.on("qr", (qr) => {
@@ -160,7 +159,6 @@ const estaDentroDoHorario = () => {
 };
 
 
-
 // Evento de mensagem recebida
 client.on("message", async (message) => {
   const chatId = message.from;
@@ -169,12 +167,6 @@ client.on("message", async (message) => {
   const msg = message.body.toLowerCase().trim();
   const chat = await message.getChat();
   
-      // Se o chat estiver silenciado, ignorar a mensagem
-    if (silencedChats.has(chatId)) {
-        console.log(`Chat silenciado (${chatId}), ignorando mensagem.`);
-        return;
-    }
-
   // Verifica se o remetente está na lista de contatos autorizados
   if (!allowedContacts.includes(phone)) {
     console.log(`Número não autorizado (${phone}). Mensagem ignorada.`);
@@ -278,6 +270,7 @@ client.on("message", async (message) => {
     const respostaPreco = buscarPreco(msg);
     await client.sendMessage(chatId, respostaPreco);
 	await chat.markUnread();
+	if (chat) await chat.markUnread(); // Marca a mensagem como não lida
 });
 
 client.initialize();
