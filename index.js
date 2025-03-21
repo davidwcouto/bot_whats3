@@ -66,18 +66,18 @@ const removerAtendimentoHumano = (chatId) => {
         if (atendimentoHumano.has(chatId)) {
             atendimentoHumano.delete(chatId);
         }
-    }, 30 * 60 * 1000);
+    }, 60 * 60 * 1000);
 };
 
 const removerClientesAtendidos = (chatId) => {
     setTimeout(() => {
         clientesAtendidos.delete(chatId);
-    }, 30 * 60 * 1000);
+    }, 60 * 60 * 1000);
 };
 
 // Função para buscar preços
 const buscarPreco = (produto) => {
-    if (!produto) return "⚠ Erro: Nenhum produto foi informado. Digite o nome corretamente.";
+    if (!produto) return "⚠ Nenhum produto foi informado. Digite o nome corretamente.";
 
     // Se a mensagem for apenas "incell", "original" ou "nacional", retorna erro
     const termosInvalidos = ["incell", "incel", "original", "orig", "nacional", "nac"];
@@ -90,10 +90,10 @@ const buscarPreco = (produto) => {
     );
 
     if (!item) {
-        return "❌ Produto não encontrado. Verifique o nome e tente novamente.";
+        return "❌ Produto não encontrado.\n\nPara falar com um atendente digite 2️⃣`";
 	}
 	
-    return `💰 O preço de *${item.Produto}* é *R$ ${item.Preco}* \n\n Para fazer pedido digite 2️⃣`;
+    return `💰 O preço de *${item.Produto}* é *R$ ${item.Preco}* \n\nPara fazer pedido digite 2️⃣`;
 	
 	
 };
