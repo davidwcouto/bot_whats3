@@ -101,7 +101,7 @@ const buscarPreco = (produto) => {
 
 const horarioAtendimento = {
     inicio: 9,        // 09:00
-    fim: 20,          // 18:00
+    fim: 18,          // 18:00
     minutosFim: 30,   // Até 18:30
     intervaloInicio: 12,   // Início do intervalo de não atendimento (12:00)
     intervaloFim: 13,     // Fim do intervalo de não atendimento (13:00)
