@@ -183,7 +183,7 @@ client.on("message_create", async (message) => {
                 silencedChats.delete(chatId);
 				clientesAtendidos.delete(chatId);
                 console.log(`Chat reativado automaticamente: ${chatId}`);
-            }, 60 * 60 * 1000);
+            }, 30 * 60 * 1000);
         }
     }
 });
