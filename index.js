@@ -225,6 +225,7 @@ client.on("message", async (message) => {
 
     if (msg === "consultar valor") {
         atendimentoHumano.delete(chatId);
+		silencedChats.delete(chatId);
         await client.sendMessage(chatId, "Digite o nome do produto para consultar o valor.\nExemplos:\n A12 com aro\n G20 sem aro\n k41s com aro\n iPhone 8 plus\n iPhone 12 incell\n iPhone 12 original\n Redmi 12c com aro\n Redmi Note 8 sem aro");
         removerClientesAtendidos(chatId);
 			const chat = await message.getChat(); // Obtém o chat da mensagem
