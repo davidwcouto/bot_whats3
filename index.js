@@ -78,7 +78,7 @@ const removerClientesAtendidos = (chatId) => {
 
 // Função para buscar preços
 const buscarPreco = (produto) => {
-    if (!produto) return "⚠ Nenhum produto foi informado. Digite o nome corretamente.";
+    if (!produto) return;
 
     // Se a mensagem for apenas "incell", "original" ou "nacional", retorna erro
     const termosInvalidos = ["incell", "incel", "original", "orig", "nacional", "nac"];
@@ -181,6 +181,7 @@ client.on("message_create", async (message) => {
             // Reativar automaticamente após 1 hora
             setTimeout(() => {
                 silencedChats.delete(chatId);
+				clientesAtendidos.delete(chatId);
                 console.log(`Chat reativado automaticamente: ${chatId}`);
             }, 60 * 60 * 1000);
         }
